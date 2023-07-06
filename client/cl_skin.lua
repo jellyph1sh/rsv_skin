@@ -1,4 +1,4 @@
-local appearance
+local skin
 
 function GetAllDrawablesIndexes(drawables)
     local indexes = {}
@@ -66,7 +66,7 @@ function ClothesItems(items)
                 SetPedComponentVariation(ped, dIdx, drawablesList[idx], texture, 2)
             end,
             onSelected = function(idx, item)
-                texture = GetPedTextureVariation(ped, dIdx) + 1
+                texture = texture + 1
                 if (texture >= GetNumberOfPedTextureVariations(ped, dIdx, drawablesList[idx])) then
                     texture = 0
                 end
@@ -97,20 +97,11 @@ function ClothesItems(items)
                 SetPedPropIndex(ped, pIdx, propsList[idx], texture, true)
             end,
             onSelected = function(idx, item)
-                texture = GetPedTextureVariation(ped, pIdx) + 1
+                texture = texture + 1
                 if (texture >= GetNumberOfPedPropTextureVariations(ped, pIdx, propsList[idx])) then
                     texture = 0
                 end
                 SetPedPropIndex(ped, pIdx, propsList[idx], texture, true)
-            end
-        })
-    end
-
-    if save then
-        items:Button("Save", "~b~Save your clothes!", {LeftBadge = RageUI.BadgeStyle.Tick}, true, {
-            onSelected = function()
-                TriggerServerEvent("rsv_skin:saveclothes", SaveClothes())
-                appearanceMenu:close()
             end
         })
     end
@@ -120,15 +111,25 @@ function CreateCreatorMenu()
 
 end
 
-function AppearanceMenu(haveSave)
-    appearanceMenu = RageUI.CreateMenu("Appearance", "~b~Change your appearance!")
-    save = haveSave
-    appearanceMenu.Closable = not save
-    appearanceMenu.EnableMouse = false
+function SkinMenu()
+    skinMenu = RageUI.CreateMenu("Skin Menu", "~b~Change your character!")
+    skinMenu.Closable = false
+    skinMenu.EnableMouse = false
+
+    local appearanceMenu = RageUI.CreateSubMenu(skinMenu, "Appearance", "~b~Change your appearance!")
     dIndexes = GetAllDrawablesIndexes(Config.Components)
     pIndexes = GetAllPropsIndexes(Config.Props)
+    skinMenu:isVisible(function(items)
+        items:Button("Appearance", "~b~Change your appearance!", {}, true, {}, appearanceMenu)
+        items:Button("Save", "~b~Save!", {LeftBadge = RageUI.BadgeStyle.Tick}, true, {
+            onSelected = function()
+                TriggerServerEvent("rsv_skin:saveclothes", SaveClothes())
+                skinMenu:close()
+            end
+        })
+    end)
     appearanceMenu:isVisible(ClothesItems)
-    return appearanceMenu
+    return skinMenu
 end
 
 function SpawnConnectedPlayer()
@@ -136,7 +137,7 @@ function SpawnConnectedPlayer()
         Wait(100)
     end
 
-    appearance = AppearanceMenu(true)
+    skin = SkinMenu()
 end
 
 RegisterNetEvent("rsv_skin:setclothes")
@@ -145,7 +146,7 @@ AddEventHandler("rsv_skin:setclothes", function(clothes)
 end)
 
 RegisterCommand("skin", function()
-    appearance:toggle()
+    skin:toggle()
 end, false)
 
 SpawnConnectedPlayer()
