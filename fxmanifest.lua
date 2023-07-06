@@ -6,6 +6,11 @@ description "Customize your character's appearance."
 author "JellyPh1sh"
 
 client_scripts {
+    -- UI:
+    "ui/RageUI.lua",
+    "ui/uuid.lua",
+    "ui/menu/*.lua",
+    "ui/menu/functions/**/*.lua",
     "client/*.lua"
 }
 
