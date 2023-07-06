@@ -1,3 +1,5 @@
+local appearance
+
 function GetAllDrawablesIndexes(drawables)
     local indexes = {}
     for idx, _ in pairs(drawables) do
@@ -25,7 +27,6 @@ function ApplyClothes(clothes)
     end
     local propsIndexes = {0, 1, 2, 6, 7}
     for idx, v in pairs(propsIndexes) do
-        print(#clothes.props)
         SetPedPropIndex(ped, v, clothes.props[idx], clothes.propsText[idx], true)
     end
 end
@@ -130,17 +131,24 @@ function AppearanceMenu(haveSave)
     return appearanceMenu
 end
 
+function SpawnConnectedPlayer()
+    while (not NetworkIsPlayerActive(PlayerId())) do
+        Wait(100)
+    end
+
+    appearance = AppearanceMenu(true)
+end
+
 RegisterNetEvent("rsv_skin:setclothes")
 AddEventHandler("rsv_skin:setclothes", function(clothes)
     ApplyClothes(clothes)
 end)
 
-local appearance = AppearanceMenu(true)
 RegisterCommand("skin", function()
     appearance:toggle()
 end, false)
 
-exports("AppearanceMenu", AppearanceMenu)
+SpawnConnectedPlayer()
 
 --[[
 local skinMenu = RageUI.CreateMenu("Skin Menu", "~b~Personalize your skin.")
