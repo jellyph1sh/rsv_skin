@@ -140,6 +140,8 @@ RegisterCommand("skin", function()
     appearance:toggle()
 end, false)
 
+exports("AppearanceMenu", AppearanceMenu)
+
 --[[
 local skinMenu = RageUI.CreateMenu("Skin Menu", "~b~Personalize your skin.")
 skinMenu.EnableMouse = true
