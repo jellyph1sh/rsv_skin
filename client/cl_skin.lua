@@ -55,10 +55,7 @@ function ClothesItems(items)
     -- Drawables
     for dIdx, name in pairs(Config.Components) do
         local texture = GetPedTextureVariation(ped, dIdx)
-        local drawablesList = {}
-        for i = 0, GetNumberOfPedDrawableVariations(ped, dIdx) - 1, 1 do
-            table.insert(drawablesList, i)
-        end
+        local drawablesList = RageUI.GenerateList(0, GetNumberOfPedDrawableVariations(ped, dIdx) - 1)
         items:List(name, drawablesList, dIndexes[dIdx], nil, {}, true, {
             onListChange = function(idx, item)
                 dIndexes[dIdx] = idx
@@ -78,14 +75,11 @@ function ClothesItems(items)
     -- Props
     for pIdx, name in pairs(Config.Props) do
         local texture = GetPedPropTextureIndex(ped, pIdx)
-        local propsList = {}
         local startIdx = -1
         if pIdx == 1 then
             startIdx = 0
         end
-        for i = startIdx, GetNumberOfPedPropDrawableVariations(ped, pIdx) - 1, 1 do
-            table.insert(propsList, i)
-        end
+        local propsList = RageUI.GenerateList(startIdx, GetNumberOfPedDrawableVariations(ped, dIdx) - 1)
         items:List(name, propsList, pIndexes[pIdx], nil, {}, true, {
             onListChange = function(idx, item)
                 pIndexes[pIdx] = idx
